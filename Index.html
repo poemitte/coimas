@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment préparer un repas</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #2c3e50;
+            --legumes: #2ecc71;
+            --fruits: #e67e22;
+            --proteines: #e74c3c;
+            --feculents: #f1c40f;
+            --eau: #3498db;
+            --graisses: #9b59b6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        /* --- L'ASSIETTE HARVARD (INTERACTIVE) --- */
+        .plate-container {
+            position: relative;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            border: 12px solid #ffffff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            margin-bottom: 30px;
+        }
+
+        .sector {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+            text-align: center;
+            padding: 10px;
+        }
+
+        .sector:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .sector span {
+            font-size: 0.75em;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        /* Couleurs des secteurs */
+        #sec-legumes { background-color: var(--legumes); }
+        #sec-fruits { background-color: var(--fruits); }
+        #sec-feculents { background-color: var(--feculents); color: #333; text-shadow: none; }
+        #sec-proteines { background-color: var(--proteines); }
+
+        /* --- BOUTONS ANNEXES --- */
+        .extra-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-extra {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-extra:hover { transform: translateY(-2px); }
+        .btn-eau { background-color: var(--eau); }
+        .btn-graisses { background-color: var(--graisses); }
+
+        /* --- ZONE D'AFFICHAGE DU CONTENU --- */
+        .content-box {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            min-height: 180px;
+        }
+
+        .content-box h2 {
+            margin-top: 0;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .content-box ul {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        .content-box li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Comment préparer un repas</h1>
+    <p class="subtitle">Clique sur une partie de l'assiette pour savoir comment composer ton repas !</p>
+
+    <!-- L'ASSIETTE INTERACTIVE (HARVARD) -->
+    <div class="plate-container">
+        <div class="sector" id="sec-legumes" onclick="showInfo('legumes')">
+            🥦 Légumes
+            <span>(1/2 de l'assiette)</span>
+        </div>
+        <div class="sector" id="sec-fruits" onclick="showInfo('fruits')">
+            🍎 Fruits
+            <span>(Un à chaque repas)</span>
+        </div>
+        <div class="sector" id="sec-feculents" onclick="showInfo('feculents')">
+            🌾 Céréales complètes
+            <span>(1/4 de l'assiette)</span>
+        </div>
+        <div class="sector" id="sec-proteines" onclick="showInfo('proteines')">
+            🍗 Protéines
+            <span>(1/4 de l'assiette)</span>
+        </div>
+    </div>
+
+    <!-- BOUTONS COMPLÉMENTAIRES -->
+    <div class="extra-buttons">
+        <button class="btn-extra btn-eau" onclick="showInfo('eau')">💧 Boisson</button>
+        <button class="btn-extra btn-graisses" onclick="showInfo('graisses')">🥑 Bonnes Graisses</button>
+    </div>
+
+    <!-- ZONE D'EXPLICATION DYNAMIQUE -->
+    <div class="content-box" id="info-display">
+        <h2>Bienvenue !</h2>
+        <p>Pour construire un repas équilibré et garder la forme, l'assiette idéale doit contenir :</p>
+        <ul>
+            <li>la moitié de légumes</li>
+            <li>le quart de céréales complètes</li>
+            <li>le quart de protéines</li>
+        </ul>
+    </div>
+
+    <script>
+        // DONNÉES ET CONTENUS PAR CATÉGORIE
+        const data = {
+            legumes: {
+                title: "🥦 Les Légumes",
+                text: "",
+                examples: [
+                    "En entrée, préparer des crudités : salade verte, carotte rapée, concombre, tomate, etc.",
+                    "Pour le repas, prévoir des légumes cuits : courgettes, aubergines, etc."
+                ]
+            },
+            feculents: {
+                title: "🌾 Céréales complètes",
+                text: "",
+                examples: [
+                    "Privilégier les céréales complètes : riz complet, pâtes, orge, avoine, etc."
+                ]
+            },
+            proteines: {
+                title: "🍗 Protéine",
+                text: "",
+                examples: [
+                    "<strong>Animale :</strong> Jambon blanc, poulet, oeufs, etc.",
+                    "<strong>Végétale :</strong> Lentilles, pois chiche, tofu, etc."
+                ]
+            },
+            fruits: {
+                title: "🍎 Les Fruits",
+                text: "",
+                examples: [
+                    "Pomme, banane, kiwi, etc."
+                ]
+            },
+            eau: {
+                title: "💧 Boisson",
+                text: "",
+                examples: [
+                    "Privilégier l'eau, le thé et le café."
+                ]
+            },
+            graisses: {
+                title: "🥑 Bonnes graisses",
+                text: "Il y a 4 types de graisses dans notre alimentation :",
+                customHtml: `
+                    <ul>
+                        <li><strong>Saturée :</strong> viande rouge, graisse animale et produits laitiers</li>
+                        <li><strong>Monoinsaturée :</strong> certaines huiles végétales</li>
+                        <li><strong>Polyinsaturée (oméga 3 et 6) :</strong> poissons gras, certaines huiles végétales, graines et noix</li>
+                        <li><strong>Trans :</strong> huile modifiée industriellement</li>
+                    </ul>
+                    <p>La consommation de graisse trans doit être absolument évitée.</p>
+                    <p>La consommation de graisses insaturées doit être privilégiée face aux graisses saturées. Pour cela, il faut éviter les graisses animales et consommer chaque jour une ou plusieurs sources d'oméga 3 ou 6.</p>
+                    <p><strong>Aliments source “d’oméga” :</strong></p>
+                    <ul>
+                        <li>poissons gras (saumon, truite, maquereau, sardine)</li>
+                        <li>oléagineux (amandes, noisettes, cajou, etc.)</li>
+                        <li>graines (tournesol, chia, etc.)</li>
+                        <li>huiles végétales (colza, soja, canola, etc.)</li>
+                        <li>certains légumes à feuilles vertes (chou vert, kale, épinard)</li>
+                    </ul>
+                `
+            }
+        };
+
+        // FONCTION DE MISE À JOUR DE L'AFFICHAGE
+        function showInfo(category) {
+            const item = data[category];
+            const display = document.getElementById('info-display');
+            
+            let htmlContent = `<h2>${item.title}</h2>`;
+            if (item.text) {
+                htmlContent += `<p>${item.text}</p>`;
+            }
+            
+            if (item.customHtml) {
+                htmlContent += item.customHtml;
+            } else if (item.examples) {
+                htmlContent += `<ul>`;
+                item.examples.forEach(ex => {
+                    htmlContent += `<li>${ex}</li>`;
+                });
+                htmlContent += `</ul>`;
+            }
+            
+            display.innerHTML = htmlContent;
+        }
+    </script>
+</body>
+</html>
