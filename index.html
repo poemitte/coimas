@@ -225,10 +225,25 @@
             },
             graisses: {
                 title: "🥑 Bonnes graisses",
-                text: "",
-                examples: [
-                    "Pour les vinaigrettes, utiliser l'huile de colza. Pour la cuisson, favoriser l'huile d'olive."
-                ]
+                text: "Il y a 4 types de graisses dans notre alimentation :",
+                customHtml: `
+                    <ul>
+                        <li><strong>Saturée :</strong> viande rouge, graisse animale et produits laitiers</li>
+                        <li><strong>Monoinsaturée :</strong> certaines huiles végétales</li>
+                        <li><strong>Polyinsaturée (oméga 3 et 6) :</strong> poissons gras, certaines huiles végétales, graines et noix</li>
+                        <li><strong>Trans :</strong> huile modifiée industriellement</li>
+                    </ul>
+                    <p>La consommation de graisse trans doit être absolument évitée.</p>
+                    <p>La consommation de graisses insaturées doit être privilégiée face aux graisses saturées. Pour cela, il faut éviter les graisses animales et consommer chaque jour une ou plusieurs sources d'oméga 3 ou 6.</p>
+                    <p><strong>Aliments source “d’oméga” :</strong></p>
+                    <ul>
+                        <li>poissons gras (saumon, truite, maquereau, sardine)</li>
+                        <li>oléagineux (amandes, noisettes, cajou, etc.)</li>
+                        <li>graines (tournesol, chia, etc.)</li>
+                        <li>huiles végétales (colza, soja, canola, etc.)</li>
+                        <li>certains légumes à feuilles vertes (chou vert, kale, épinard)</li>
+                    </ul>
+                `
             }
         };
 
@@ -241,13 +256,16 @@
             if (item.text) {
                 htmlContent += `<p>${item.text}</p>`;
             }
-            htmlContent += `<ul>`;
             
-            item.examples.forEach(ex => {
-                htmlContent += `<li>${ex}</li>`;
-            });
-            
-            htmlContent += `</ul>`;
+            if (item.customHtml) {
+                htmlContent += item.customHtml;
+            } else if (item.examples) {
+                htmlContent += `<ul>`;
+                item.examples.forEach(ex => {
+                    htmlContent += `<li>${ex}</li>`;
+                });
+                htmlContent += `</ul>`;
+            }
             
             display.innerHTML = htmlContent;
         }
